@@ -211,13 +211,19 @@ public class ClaimedChunkManager {
 				return override.getProtect();
 			}
 
-			return isFake || !getBypassProtection(player.getUUID());
+			return isFake || !getBypassProtection(player.getUUID()) ||
+					(FTBChunksWorldConfig.noWilderness(player) && player.level.dimension() == Level.OVERWORLD);
 		} else if (FTBChunksWorldConfig.noWilderness(player)) {
 			ProtectionOverride override = protection.override(player, pos, hand, null, targetEntity);
 
 			if (override.isOverride()) {
 				return override.getProtect();
 			} else if (!isFake && getBypassProtection(player.getUUID())) {
+				return false;
+			}
+
+			// Only noWilderness in overworld
+			if (player.level.dimension() != Level.OVERWORLD) {
 				return false;
 			}
 

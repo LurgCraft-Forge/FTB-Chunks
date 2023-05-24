@@ -189,8 +189,11 @@ public class FTBChunksTeamData {
 			return r;
 		}
 
-		chunk.unclaim(source, true);
-		return chunk;
+		if (source.hasPermission(2)) {
+			chunk.unclaim(source, true);
+			return chunk;
+		}
+		return r;
 	}
 
 	public ClaimResult load(CommandSourceStack source, ChunkDimPos pos, boolean checkOnly) {
