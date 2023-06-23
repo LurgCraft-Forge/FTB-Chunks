@@ -211,8 +211,14 @@ public class ClaimedChunkManager {
 				return override.getProtect();
 			}
 
+			// Check if BypassProtection is enabled, to allow admins with bypass enabled to interact everywhere
+			if (getBypassProtection(player.getUUID())) {
+				return false;
+			}
+
+			// Check if they are a fake player, in which case deny access outside of claims
 			return isFake || !getBypassProtection(player.getUUID()) ||
-					(FTBChunksWorldConfig.noWilderness(player) && player.level.dimension() == Level.OVERWORLD);
+					(FTBChunksWorldConfig.noWilderness(player) && player.level.dimension() == Level.OVERWORLD);		// I'm pretty sure the second half of this check is invalid, but leaving it pending further testing
 		} else if (FTBChunksWorldConfig.noWilderness(player)) {
 			ProtectionOverride override = protection.override(player, pos, hand, null, targetEntity);
 
@@ -227,7 +233,7 @@ public class ClaimedChunkManager {
 				return false;
 			}
 
-			player.displayClientMessage(new TextComponent("You need to claim this chunk to interact with blocks here!"), true);
+			player.displayClientMessage(new TextComponent("You can only interact with blocks on your island when in the Overworld!"), true);
 			return true;
 		}
 
