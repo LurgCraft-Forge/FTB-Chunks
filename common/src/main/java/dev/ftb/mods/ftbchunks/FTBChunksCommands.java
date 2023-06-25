@@ -46,6 +46,14 @@ import java.util.function.ToIntBiFunction;
  */
 public class FTBChunksCommands {
 	public static void registerCommands(CommandDispatcher<CommandSourceStack> dispatcher, Commands.CommandSelection selection) {
+		// register a dedicated "admin" command, just for bypass_protection so this command can be delegated to moderators using
+		// LuckPerms permissions, instead of requiring op
+		dispatcher.register(Commands.literal("ftbchunks-admin")
+				.then(Commands.literal("bypass_protection")
+						.executes(context -> bypassProtection(context.getSource()))
+				)
+		);
+
 		LiteralCommandNode<CommandSourceStack> command = dispatcher.register(Commands.literal("ftbchunks")
 				.then(Commands.literal("claim")
 						.executes(context -> claim(context.getSource(), selfTeam(context.getSource()), 0))
